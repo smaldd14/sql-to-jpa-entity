@@ -21,10 +21,14 @@ def sql_to_jpa_entity(sql):
         # Convert SQL types to Java types
         if column_type == "SERIAL":
             java_type = "Long"
-        elif column_type == "VARCHAR":
+        elif column_type in ["VARCHAR", "character"]:
             java_type = "String"
         elif column_type == "TIMESTAMP":
             java_type = "LocalDateTime"
+        elif column_type == "integer":
+            java_type = "Integer"
+        elif column_type == "geometry":
+            java_type = "Polygon"
         else:
             java_type = column_type  # Placeholder for other types
 
@@ -50,12 +54,13 @@ def sql_to_jpa_entity(sql):
 sql_schema = """
 CREATE TABLE user (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    username character(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    location geometry,
+    age integer,
     email VARCHAR(255) UNIQUE NOT NULL,
     date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """
 
 print(sql_to_jpa_entity(sql_schema))
-
